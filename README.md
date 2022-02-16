@@ -1,128 +1,102 @@
-# IBM Cloud <module_name> - Terraform Module
+# Terraform Module to install Cloud Pak for Security
 
-Mention the purpose of writing these modules.
+This Terraform Module installs **Cloud Pak for Security Operator** on an Openshift (ROKS) cluster on IBM Cloud. Once the Terraform module has run a cluster will install the CP4S operator creating the threat management resource.  After the threat management resource is created further configuration will be needed, you can follow the instructions on the CP4S documentation [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.8?topic=security-postinstallation)
 
-E.g:
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`
 
-This is a collection of modules that make it easier to provision and configure Observability services like logging, monitor and activity tracker on IBM Cloud Platform:
-* [logging-logdna](modules/logging-logdna)
-* [monitoring-sysdig](modules/monitoring-sysdig)
-* [activity-tracker-logdna](modules/activity-tracker-logdna)
+- [Terraform Module to install Cloud Pak for Security](#terraform-module-to-install-cloud-pak-for-security)
+  - [Required command line tools](#setup-tools)
+  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
+  - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
+    - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
+    - [Using the CP4S Module](#using-the-cp4s-module)
+  - [Input Variables](#input-variables)
+  - [Executing the Terraform Script](#executing-the-terraform-script)
 
-## Compatibility
+## Setup Tools
 
-This module is meant for use with Terraform 0.13 (and higher).
+The cloud pak for security installer runs on your machine, for the installer go [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=tasks-installing-developer-tools) to be sure your command line tools are compatible.
 
-## Usage
+## Set up access to IBM Cloud
 
-Examples are captured in [examples](./examples/) folder, demonstarte how to use a module through a template:
+If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
 
-e.g:
+Go [here](../../CREDENTIALS.md) for details.
+
+## Provisioning this module in a Terraform Script
+
+### Setting up the OpenShift cluster
+
+NOTE: An OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
+
+An LDAP is required for new instances of CP4S.  This is not required for installation but will be required before CP4S can be used.  If you do not have an LDAP you can complete the installation however full features will not be available until after LDAP configuration is complete.  This link can provide more information [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.8?topic=security-postinstallation)
+
+To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.6+ cluster on IBM Cloud Classic contains `5` workers of flavor `b3c.8x32`, however read the [Cloud Pak for Security documentation](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=requirements-hardware) .
+
+Add the following code to get the OpenShift cluster (new or existing) configuration:
 
 ```hcl
-provider "ibm" {
-}
-
-data "ibm_resource_group" "logdna" {
+data "ibm_resource_group" "group" {
   name = var.resource_group
 }
 
-module "logdna_instance" {
-  source  = "terraform-ibm-modules/observability/ibm//modules/logging-logdna"
-
-
-  bind_resource_key   = var.bind_resource_key
-  service_name        = var.service_name
-  resource_group_id   = data.ibm_resource_group.logdna.id
-  plan                = var.plan
-  region              = var.region
-  service_endpoints   = var.service_endpoints
-  tags                = var.tags
-  resource_key_name   = var.resource_key_name
-  role                = var.role
-  resource_key_tags   = var.resource_key_tags
+data "ibm_container_cluster_config" "cluster_config" {
+  cluster_name_id   = var.cluster_name_id
+  resource_group_id = data.ibm_resource_group.group.id
+  download          = true
+  config_dir        = "./kube/config"     // Create this directory in advance
+  admin             = false
+  network           = false
 }
-
 ```
 
-## Requirements
+**NOTE**: Create the `./kube/config` directory if it doesn't exist.
 
-### Terraform plugins
+Input:
 
-- [Terraform](https://www.terraform.io/downloads.html) 0.13 (or later)
-- [terraform-provider-ibm](https://github.com/IBM-Cloud/terraform-provider-ibm)
+- `cluster_name_id`: either the cluster name or ID.
 
-## Install
+- `ibm_resource_group`:  resource group where the cluster is running
 
-### Terraform
+Output:
 
-Be sure you have the correct Terraform version (0.13), you can choose the binary here:
-- https://releases.hashicorp.com/terraform/
+`ibm_container_cluster_config` used as input for the `cp4s` module
 
-### Terraform plugins
+### Using the CP4S Module
 
-Be sure you have the compiled plugins on $HOME/.terraform.d/plugins/
+Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Security.
 
-- [terraform-provider-ibm](https://github.com/IBM-Cloud/terraform-provider-ibm)
+```hcl
+module "cp4s" {
+  source          = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s"
+  enable          = true
 
-### Pre-commit hooks
+  cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
-Run the following command to execute the pre-commit hooks defined in .pre-commit-config.yaml file
-```
-pre-commit run -a
-```
-You can install pre-coomit tool using
-
-```
-pip install pre-commit
-```
-or
-```
-pip3 install pre-commit
-```
-### Detect Secret hook
-
-Used to detect secrets within a code base.
-
-To create a secret baseline file run following command
-
-```
-detect-secrets scan --update .secrets.baseline
+  // Entitled Registry parameters:
+  entitled_registry_key        = var.entitled_registry_key
+  entitled_registry_user_email = var.entitled_registry_user_email
+  admin_user = var.admin_user
+}
 ```
 
-While running the pre-commit hook, if you encounter an error like
+## Input Variables
 
-```
-WARNING: You are running an outdated version of detect-secrets.
-Your version: 0.13.1+ibm.27.dss
-Latest version: 0.13.1+ibm.46.dss
-See upgrade guide at https://ibm.biz/detect-secrets-how-to-upgrade
-```
+| Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
+ `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
+| `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
+| `admin_user`                           | The user name of the LDAP that cp4s will use on default configuration                                                                                                                        |                       | Yes       |
 
-run below command
 
-```
-pre-commit autoupdate
-```
-which upgrades all the pre-commit hooks present in .pre-commit.yaml file.
+For an example of how to put all this together, refer to our [Cloud Pak for Security Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform//cp4s).
 
-## How to input variable values through a file
+## Executing the Terraform Script
 
-To review the plan for the configuration defined (no resources actually provisioned)
-```
-terraform plan -var-file=./input.tfvars
-```
-To execute and start building the configuration defined in the plan (provisions resources)
-```
-terraform apply -var-file=./input.tfvars
-```
+Execute the following commands to install the Cloud Pak:
 
-To destroy the VPC and all related resources
+```bash
+terraform init
+terraform plan
+terraform apply
 ```
-terraform destroy -var-file=./input.tfvars
-```
-
-## Note
-
-All optional parameters, by default, will be set to `null` in respective example's variable.tf file. You can also override these optional parameters.
-
