@@ -29,7 +29,7 @@ done
 
 # echo "Creating namespace ${NAMESPACE}"
 echo "creating namespace ${NAMESPACE}"
-kubectl create namespace ${NAMESPACE} 
+kubectl create namespace ${NAMESPACE}
 
 echo "Deploying Catalog Option ${OPERATOR_CATALOG}"
 echo "${OPERATOR_CATALOG}" | kubectl apply -f -

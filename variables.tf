@@ -30,7 +30,7 @@ variable "enable" {
 }
 
 variable "cluster_config_path" {
-  default = "./.kube/config/"
+  default     = "./.kube/config/"
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
@@ -40,7 +40,7 @@ variable "entitled_registry_user_email" {
 
 // This value is currently not being leveraged properly in insatll_cp4s
 variable "namespace" {
-  default = "cp4s"
+  default     = "cp4s"
   description = "Namespace for Cloud Pak for Security"
 }
 
