@@ -13,7 +13,7 @@ fmt:
 check-api-key:
 	@[[ -n $$IC_API_KEY ]]
 
-check-classic-cred: check-api-key
+check-classic-cred: check-api-key # pragma: allowlist secret
 	@[[ -n $$IAAS_CLASSIC_USERNAME && -n $$IAAS_CLASSIC_API_KEY ]]
 
 # 1. Create a ROKS cluster get the ID and export it in the variable TF_VAR_cluster_id

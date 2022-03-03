@@ -2,11 +2,18 @@
 
 ## 1. Set up access to IBM Cloud
 
-If running this module from your local terminal, you need to set the credentials to access IBM Cloud.
+If running this module from your local terminal, you need to set the credentials to access IBM Cloud. You can will also need to set the IC_API_KEY the steps are
+
+1. Make sure you’re logged into cloud.ibm.com and within the correct account.
+2. Go to [https://cloud.ibm.com/iam/apikeys](https://cloud.ibm.com/iam/apikeys) and click on Create an IBM API key
+3. Provide a name and description.
+4. export the key as IC_API_KEY
+
+``` bash
+export IC_API_KEY=<given_secret> # pragma: allowlist secret
+```
 
 You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
-
-Go [here](../../CREDENTIALS.md) for details.
 
 ## 2. Test
 
