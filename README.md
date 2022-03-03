@@ -1,4 +1,4 @@
-# Terraform Module to install Cloud Pak for Security
+# Terraform Module - Cloud Pak for Security Install
 
 This Terraform Module installs **Cloud Pak for Security Operator** on an Openshift (ROKS) cluster on IBM Cloud. Once the Terraform module has run a cluster will install the CP4S operator creating the threat management resource.  After the threat management resource is created further configuration will be needed, you can follow the instructions on the CP4S documentation [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.8?topic=security-postinstallation)
 
@@ -16,6 +16,8 @@ This Terraform Module installs **Cloud Pak for Security Operator** on an Openshi
 ## Setup Tools
 
 The cloud pak for security installer runs on your machine, for the installer go [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=tasks-installing-developer-tools) to be sure your command line tools are compatible.
+
+Terraform plugins will be Terraform 0.13 or later and terraform-provide-ibm 1.34 or later
 
 ## Set up access to IBM Cloud
 
