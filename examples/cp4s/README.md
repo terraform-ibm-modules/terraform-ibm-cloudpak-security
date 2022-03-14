@@ -24,19 +24,19 @@ Follow these instructions to test the Terraform Module manually
 Create the file `test.auto.tfvars` with the following input variables, these values are fake examples:
 
 ```hcl
-source          = "./.."
+    source          = "./.."
 
-// ROKS cluster parameters:
-cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
-region = var.region
-resource_group_name = var.resource_group_name
-cluster_id = var.cluster_id
+    // ROKS cluster parameters:
+    cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
+    region = var.region
+    resource_group_name = var.resource_group_name
+    cluster_name_id = var.cluster_name_id
 
-// Entitled Registry parameters:
-entitled_registry_key        = var.entitled_registry_key
-entitled_registry_user_email = var.entitled_registry_user_email
+    // Entitled Registry parameters:
+    entitled_registry_key        = var.entitled_registry_key
+    entitled_registry_user_email = var.entitled_registry_user_email
 
-admin_user = var.admin_user
+    admin_user = var.admin_user
 ```
 
 These parameters are:
@@ -60,4 +60,4 @@ One of the Test Scenarios is to verify the YAML files rendered to install IAF, t
 
  execute: `terraform destroy`.
 
-There are some directories and files you may want to manually delete, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube rendered_files` as well as delete the `cp4s_cli_install` and `ibm-cp-security`
+There are some directories and files you will want to delete on your local machine.  These files contain metadata and private keys to your cluster. `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube rendered_files` as well as delete the `cp4s_cli_install` and `ibm-cp-security`

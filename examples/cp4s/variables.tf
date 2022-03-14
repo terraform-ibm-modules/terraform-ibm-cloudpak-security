@@ -1,11 +1,13 @@
 variable "region" {
   description = "The region name that the cluster is currently running in"
 }
+
 variable "resource_group_name" {
   description = "The resource name that the cluster is currently running under"
 }
-variable "cluster_id" {
-  description = "The id of the cluster"
+
+variable "cluster_name_id" {
+  description = "The name or the id of the cluster.  Cluster id is to be depreciated"
 }
 
 variable "cluster_config_path" {
