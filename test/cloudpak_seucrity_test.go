@@ -13,14 +13,14 @@ import (
 )
 
 // An example of how to test the Terraform module to create cos instance in examples/instance using Terratest.
-func TestAccIBMCP4I(t *testing.T) {
+func TestAccIBMCP4S(t *testing.T) {
 	t.Parallel()
 
 	// Construct the terraform options with default retryable errors to handle the most common retryable errors in
 	// terraform testing.
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		// The path to where our Terraform code is located
-		TerraformDir: "../examples/cp4i",
+		TerraformDir: "../examples/cp4s",
 
 		// Variables to pass to our Terraform code using -var options
 		Vars: map[string]interface{}{
@@ -43,15 +43,15 @@ func TestAccIBMCP4I(t *testing.T) {
 	if len(endpoint) <= 0 {
 		t.Fatal("Wrong output")
 	}
-	fmt.Println("Cloud Pak for Integration Console URL", endpoint)
+	fmt.Println("Cloud Pak for Security Console URL", endpoint)
 	user := terraform.Output(t, terraformOptions, "user")
 	if len(user) <= 0 {
 		t.Fatal("Wrong output")
 	}
-	fmt.Println("Cloud Pak for Integration Console User ID", user)
+	fmt.Println("Cloud Pak for Security Console User ID", user)
 	password := terraform.Output(t, terraformOptions, "password") //pragma: allowlist secret
 	if len(password) <= 0 {
 		t.Fatal("Wrong output")
 	}
-	fmt.Println("Cloud Pak for Integration Console Password", password)
+	fmt.Println("Cloud Pak for Security Console Password", password)
 }
