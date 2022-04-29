@@ -2,8 +2,6 @@
 
 This Terraform Module installs **Cloud Pak for Security Operator** on an Openshift (ROKS) cluster on IBM Cloud. Once the Terraform module has run a cluster will install the CP4S operator creating the threat management resource.  After the threat management resource is created further configuration will be needed, you can follow the instructions on the CP4S documentation [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.8?topic=security-postinstallation)
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`
-
 - [Terraform Module to install Cloud Pak for Security](#terraform-module-to-install-cloud-pak-for-security)
   - [Required command line tools](#setup-tools)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -29,7 +27,7 @@ Go [here](../../CREDENTIALS.md) for details.
 
 ### Setting up the OpenShift cluster
 
-NOTE: An OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
+NOTE: An OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our [ROKS](https://github.com/terraform-ibm-modules/terraform-ibm-cluster/tree/master/modules) Terraform module.
 
 An LDAP is required for new instances of CP4S.  This is not required for installation but will be required before CP4S can be used.  If you do not have an LDAP you can complete the installation however full features will not be available until after LDAP configuration is complete.  This link can provide more information [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.8?topic=security-postinstallation)
 
@@ -84,12 +82,13 @@ module "cp4s" {
 
 ## Input Variables
 
-| Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
-| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
- `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
-| `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
-| `admin_user`                           | The user name of the LDAP that cp4s will use on default configuration                                                                                                                        |                       | Yes       |
+| Name                         | Description                                                 | Type   | Default | Required |
+|------------------------------|-------------------------------------------------------------|--------|---------|----------|
+| entitled_registry_key        | Entitlement key from IBM products library, see below        | string | n/a     | yes      |
+| entitled_registry_user_email | Email of user related to entitled_registry_key              | string | n/a     | yes      |
+| admin_user                   | The admin username of the LDAP CP4S will be configured with | string | n/a     | yes      |
 
+Get the entitlement key from the [products services container library](https://myibm.ibm.com/products-services/containerlibrary).
 
 For an example of how to put all this together, refer to our [Cloud Pak for Security Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform//cp4s).
 

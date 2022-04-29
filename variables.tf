@@ -1,5 +1,5 @@
 
-variable "is_enable" {
+variable "provision_cp4s" {
   default     = true
   description = "If set to true installs Cloud-Pak for security on the given cluster"
 }

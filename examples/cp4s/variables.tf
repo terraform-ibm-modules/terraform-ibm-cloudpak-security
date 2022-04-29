@@ -3,7 +3,7 @@ variable "region" {
 }
 
 variable "resource_group_name" {
-  description = "The resource name that the cluster is currently running under"
+  description = "The resource group name that the cluster is currently running under"
 }
 
 variable "cluster_name_id" {

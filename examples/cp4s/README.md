@@ -41,12 +41,15 @@ Create the file `test.auto.tfvars` with the following input variables, these val
 
 These parameters are:
 
-- `cluster_config_path`: Path leading to the cluster info by default is set to ./.kube/config/
-- `region`: Region that the cluster is located in.
-- `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
-- `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
-- `admin_user`: The admin user name that will be used with the LDAP.  Refer to the CP4S documentation on LDAP requirments
-Execute the following Terraform commands:
+| Name                         | Description                                            | Type   | Default        | Required |
+|------------------------------|--------------------------------------------------------|--------|----------------|----------|
+| cluster_config_path          | Path leading to the cluster details                    | string | ./.kube/config | yes      |
+| region                       | Region that the cluster is located in                  | string | us-east        | yes      |
+| entitled_registry_key        | Entitlement key from IBM products library, see below   | string | n/a            | yes      |
+| entitled_registry_user_email | Emailed address related to entitlement key             | string | n/a            | yes      |
+| admin_user                   | The admin user name of LDAP to be configured with CP4S | String | n/a            | yes      |
+
+Get the entitlement key from the [products services container library](https://myibm.ibm.com/products-services/containerlibrary). Optionally you can store the key in a file and use the `file()` function to get the file content/key
 
 ```bash
 terraform init
