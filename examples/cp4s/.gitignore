@@ -2,3 +2,6 @@ rendered_files
 test.auto.tfvars
 
 .kube
+
+temp.yaml
+temp.json
