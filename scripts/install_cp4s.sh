@@ -192,7 +192,7 @@ done
 
 #CHECK ISC ROUTE//CP4S CONSOLE ROUTE IS CREATED
 evtCount=0
-evtTimeout=30 #15 mins
+evtTimeout=50 #15 mins
 SLEEP_TIME="60"
 while true; do
   if [ "$evtCount" -eq "$evtTimeout" ]; then
