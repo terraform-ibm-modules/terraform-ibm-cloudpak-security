@@ -73,6 +73,5 @@ data "external" "get_cp4s_endpoints" {
 
   query = {
     kubeconfig = var.cluster_config_path
-    namespace  = var.namespace
   }
 }

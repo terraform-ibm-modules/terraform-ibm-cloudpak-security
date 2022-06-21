@@ -1,6 +1,6 @@
 #!/bin/bash
 
-eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) NAMESPACE=\(.namespace)"')"
+eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig)"')"
 
 # Obtains the  credentials and endpoints for the installed CP4I Dashboard
 results() {
@@ -12,6 +12,7 @@ results() {
 
   jq -n \
     --arg endpoint "$console_url_address"
+    '{ "endpoint": $endpoint }'
   exit 0
 }
 
