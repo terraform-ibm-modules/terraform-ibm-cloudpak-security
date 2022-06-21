@@ -11,7 +11,7 @@ results() {
   # username="admin"
 
   jq -n \
-    --arg endpoint "$console_url_address" 
+    --arg endpoint "$console_url_address"
   exit 0
 }
 
