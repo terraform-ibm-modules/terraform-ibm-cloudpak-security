@@ -64,7 +64,7 @@ resource "null_resource" "install_cp4s" {
 }
 
 
-data "external" "get_aiman_endpoints" {
+data "external" "get_cp4s_endpoints" {
   depends_on = [
     null_resource.install_cp4s
   ]
