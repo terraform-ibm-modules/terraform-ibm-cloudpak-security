@@ -6,8 +6,7 @@ package test
 
 import (
  	"testing"
-    	"os"
-	/*"fmt"*/
+   	"os"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
@@ -35,7 +34,7 @@ func TestAccIBMCP4I(t *testing.T) {
 			"project_name":		"jah-cp4s",
 			"environment":		"test",
 			"owner":		"terratest",
-			"roks_version":		4.7,
+			"roks_version":		4.8,
 			"entitled_registry_key":	os.Getenv("CP_ENTITLEMENT"), //pragma: allowlist secret
 			"entitled_registry_user_email":	os.Getenv("CP_ENTITLEMENT_EMAIL"),
 		},
@@ -47,20 +46,4 @@ func TestAccIBMCP4I(t *testing.T) {
 	// This will run `terraform init` and `terraform apply` and fail the test if there are any errors
 	terraform.InitAndApply(t, terraformOptions)
 
-	// Run `terraform output` to get the value of an output variable
-	/* url := terraform.Output(t, terraformOptions, "url")
-	if len(url) <= 0 {
-		t.Fatal("Wrong output")
-	}
-	fmt.Println("Cloud Pak for Integration Console URL", url)
-	user := terraform.Output(t, terraformOptions, "user")
-	if len(user) <= 0 {
-		t.Fatal("Wrong output")
-	}
-	fmt.Println("Cloud Pak for Integration Console User ID", user)
-	password := terraform.Output(t, terraformOptions, "password") //pragma: allowlist secret
-	if len(password) <= 0 {
-		t.Fatal("Wrong output")
-	}
-	fmt.Println("Cloud Pak for Integration Console Password", password)*/
 }
